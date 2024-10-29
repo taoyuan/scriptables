@@ -4,7 +4,7 @@ import {join} from 'path';
 import {OutputAsset, OutputChunk, rollup} from 'rollup';
 import tmp from 'tmp';
 
-import scriptableBundle from '../..';
+import scriptableBundle, {NamedScriptableManifest} from '../..';
 
 describe('scriptableBundle', () => {
   const mockManifest: ScriptableManifest = {icon: {color: 'blue', glyph: 'star'}};
@@ -30,7 +30,7 @@ describe('scriptableBundle', () => {
       always_run_in_app: true,
       share_sheet_inputs: ['text', 'url'],
     };
-    const configFilePath = join(tmpDir.name, 'input.json');
+    const configFilePath = join(tmpDir.name, 'input.manifest');
     fs.writeFileSync(configFilePath, JSON.stringify(fileConfig));
 
     const bundle = await rollup({
@@ -109,7 +109,7 @@ describe('scriptableBundle', () => {
     const inputFilePath = join(tmpDir.name, 'input.js');
     fs.writeFileSync(inputFilePath, mockCode);
 
-    const configFilePath = join(tmpDir.name, 'input.json');
+    const configFilePath = join(tmpDir.name, 'input.manifest');
     fs.writeFileSync(configFilePath, '{invalidJson}');
 
     const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation();
@@ -258,5 +258,63 @@ describe('scriptableBundle', () => {
       expect(asset.fileName).toBe(`input${index + 1}.scriptable`);
       expect(asset.source).toBeDefined();
     });
+  });
+
+  it('should include the name property in the generated scriptable file', async () => {
+    const manifest: NamedScriptableManifest = {name: 'Test Script', icon: {color: 'blue', glyph: 'star'}};
+    const plugin = scriptableBundle(manifest);
+    const inputFilePath = join(tmpDir.name, 'input.js');
+    fs.writeFileSync(inputFilePath, mockCode);
+
+    const bundle = await rollup({
+      input: inputFilePath,
+      plugins: [plugin],
+    });
+
+    const {output} = await bundle.generate({
+      format: 'es',
+    });
+    const [scriptChunk, scriptableAsset] = output as [OutputChunk, OutputAsset];
+
+    const expectedBanner = generateBanner(manifest);
+
+    expect(scriptChunk.code).toContain(expectedBanner);
+    expect(scriptChunk.code).toContain(mockCode);
+    expect(scriptableAsset.fileName).toBe('input.scriptable');
+    expect(scriptableAsset.type).toBe('asset');
+    expect(scriptableAsset.source).toContain('"name":"Test Script"');
+  });
+
+  it('should include the name property from the manifest file in the generated scriptable file', async () => {
+    const manifest: NamedScriptableManifest = {icon: {color: 'blue', glyph: 'star'}};
+    const plugin = scriptableBundle(manifest);
+    const inputFilePath = join(tmpDir.name, 'input.js');
+    fs.writeFileSync(inputFilePath, mockCode);
+
+    const fileManifest = {
+      name: 'Manifest Script',
+      always_run_in_app: true,
+      share_sheet_inputs: ['text', 'url'],
+    };
+    const configFilePath = join(tmpDir.name, 'input.manifest');
+    fs.writeFileSync(configFilePath, JSON.stringify(fileManifest));
+
+    const bundle = await rollup({
+      input: inputFilePath,
+      plugins: [plugin],
+    });
+
+    const {output} = await bundle.generate({
+      format: 'es',
+    });
+    const [scriptChunk, scriptableAsset] = output as [OutputChunk, OutputAsset];
+
+    const expectedBanner = generateBanner({...fileManifest, ...manifest} as ScriptableManifest);
+
+    expect(scriptChunk.code).toContain(expectedBanner);
+    expect(scriptChunk.code).toContain(mockCode);
+    expect(scriptableAsset.fileName).toBe('input.scriptable');
+    expect(scriptableAsset.type).toBe('asset');
+    expect(scriptableAsset.source).toContain('"name":"Manifest Script"');
   });
 });

@@ -8,12 +8,16 @@ const SUPPORTED_MANIFEST_EXTENSIONS = ['.manifest.json', '.manifest', '.json'];
 const SCRIPTABLE_EXTENSION = '.scriptable';
 const SOURCE_EXT = /\.[tj]sx?$/;
 
-export default function scriptableBundle(manifest: ScriptableManifest = {}): Plugin {
+export interface NamedScriptableManifest extends ScriptableManifest {
+  name?: string;
+}
+
+export default function scriptableBundle(manifest: NamedScriptableManifest = {}): Plugin {
   return {
     name: 'scriptable',
     renderChunk(code, chunk) {
       const fileFullPath = chunk.facadeModuleId || '';
-      let customManifest: ScriptableManifest = {};
+      let customManifest: NamedScriptableManifest = {};
 
       if (fileFullPath) {
         const chunkDir = dirname(fileFullPath);

@@ -21,7 +21,7 @@ describe('scriptableBundle', () => {
   });
 
   it('should generate a banner and emit a scriptable file', async () => {
-    const plugin = scriptableBundle({manifest: mockManifest});
+    const plugin = scriptableBundle(mockManifest);
     const inputFilePath = join(tmpDir.name, 'input.js');
     fs.writeFileSync(inputFilePath, mockCode);
 
@@ -51,13 +51,13 @@ describe('scriptableBundle', () => {
     expect(scriptChunk.code).toContain(mockCode);
 
     expect(scriptableAsset).toBeDefined();
-    expect(scriptableAsset.fileName).toBe('input.manifest.json');
+    expect(scriptableAsset.fileName).toBe('input.scriptable');
     expect(scriptableAsset.type).toBe('asset');
     expect(scriptableAsset.source).toBeDefined();
   });
 
   it('should handle missing config file gracefully', async () => {
-    const plugin = scriptableBundle({manifest: mockManifest});
+    const plugin = scriptableBundle(mockManifest);
     const inputFilePath = join(tmpDir.name, 'input.js');
     fs.writeFileSync(inputFilePath, mockCode);
 
@@ -75,7 +75,7 @@ describe('scriptableBundle', () => {
 
     expect(scriptChunk.code).toContain(expectedBanner);
     expect(scriptChunk.code).toContain(mockCode);
-    expect(scriptableAsset.fileName).toBe('input.manifest.json');
+    expect(scriptableAsset.fileName).toBe('input.scriptable');
     expect(scriptableAsset.type).toBe('asset');
     expect(scriptableAsset.source).toBeDefined();
   });
@@ -99,13 +99,13 @@ describe('scriptableBundle', () => {
 
     expect(scriptChunk.code).toContain(expectedBanner);
     expect(scriptChunk.code).toContain(mockCode);
-    expect(scriptableAsset.fileName).toBe('input.manifest.json');
+    expect(scriptableAsset.fileName).toBe('input.scriptable');
     expect(scriptableAsset.type).toBe('asset');
     expect(scriptableAsset.source).toBeDefined();
   });
 
   it('should warn if manifest file cannot be read', async () => {
-    const plugin = scriptableBundle({manifest: mockManifest});
+    const plugin = scriptableBundle(mockManifest);
     const inputFilePath = join(tmpDir.name, 'input.js');
     fs.writeFileSync(inputFilePath, mockCode);
 
@@ -132,7 +132,7 @@ describe('scriptableBundle', () => {
   });
 
   it('should use default schema extension if not provided', async () => {
-    const plugin = scriptableBundle({manifest: mockManifest});
+    const plugin = scriptableBundle(mockManifest);
     const inputFilePath = join(tmpDir.name, 'input.js');
     fs.writeFileSync(inputFilePath, mockCode);
 
@@ -146,11 +146,11 @@ describe('scriptableBundle', () => {
     });
     const [, scriptableAsset] = output as [OutputChunk, OutputAsset];
 
-    expect(scriptableAsset.fileName).toBe('input.manifest.json');
+    expect(scriptableAsset.fileName).toBe('input.scriptable');
   });
 
   it('should use custom schema extension if provided', async () => {
-    const plugin = scriptableBundle({manifest: mockManifest, bundleManifest: {extension: '.json'}});
+    const plugin = scriptableBundle(mockManifest);
     const inputFilePath = join(tmpDir.name, 'input.js');
     fs.writeFileSync(inputFilePath, mockCode);
 
@@ -164,11 +164,11 @@ describe('scriptableBundle', () => {
     });
     const [, scriptableAsset] = output as [OutputChunk, OutputAsset];
 
-    expect(scriptableAsset.fileName).toBe('input.json');
+    expect(scriptableAsset.fileName).toBe('input.scriptable');
   });
 
   it('should build manifest when buildManifest option is true', async () => {
-    const plugin = scriptableBundle({manifest: mockManifest, bundleManifest: true});
+    const plugin = scriptableBundle(mockManifest);
     const inputFilePath = join(tmpDir.name, 'input.js');
     fs.writeFileSync(inputFilePath, mockCode);
 
@@ -186,35 +186,13 @@ describe('scriptableBundle', () => {
 
     expect(scriptChunk.code).toContain(expectedBanner);
     expect(scriptChunk.code).toContain(mockCode);
-    expect(scriptableAsset.fileName).toBe('input.manifest.json');
+    expect(scriptableAsset.fileName).toBe('input.scriptable');
     expect(scriptableAsset.type).toBe('asset');
     expect(scriptableAsset.source).toBeDefined();
   });
 
-  it('should not build manifest when buildManifest option is false', async () => {
-    const plugin = scriptableBundle({manifest: mockManifest, bundleManifest: false});
-    const inputFilePath = join(tmpDir.name, 'input.js');
-    fs.writeFileSync(inputFilePath, mockCode);
-
-    const bundle = await rollup({
-      input: inputFilePath,
-      plugins: [plugin],
-    });
-
-    const {output} = await bundle.generate({
-      format: 'es',
-    });
-    const [scriptChunk] = output as [OutputChunk];
-
-    const expectedBanner = generateBanner(mockManifest);
-
-    expect(scriptChunk.code).toContain(expectedBanner);
-    expect(scriptChunk.code).toContain(mockCode);
-    expect(output.length).toBe(1); // Only scriptChunk should be present
-  });
-
   it('should prioritize manifest extensions correctly', async () => {
-    const plugin = scriptableBundle({manifest: mockManifest});
+    const plugin = scriptableBundle(mockManifest);
     const inputFilePath = join(tmpDir.name, 'input.js');
     fs.writeFileSync(inputFilePath, mockCode);
 
@@ -247,7 +225,7 @@ describe('scriptableBundle', () => {
   });
 
   it('should generate banners and emit scriptable files for multiple scripts', async () => {
-    const plugin = scriptableBundle({manifest: mockManifest});
+    const plugin = scriptableBundle(mockManifest);
     const mockCode1 = 'console.log("Hello, world 1!");';
     const mockCode2 = 'console.log("Hello, world 2!");';
     const inputFilePath1 = join(tmpDir.name, 'input1.js');
@@ -277,7 +255,7 @@ describe('scriptableBundle', () => {
     });
 
     scriptableAssets.forEach((asset, index) => {
-      expect(asset.fileName).toBe(`input${index + 1}.manifest.json`);
+      expect(asset.fileName).toBe(`input${index + 1}.scriptable`);
       expect(asset.source).toBeDefined();
     });
   });

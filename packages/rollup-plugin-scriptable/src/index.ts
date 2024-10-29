@@ -5,69 +5,46 @@ import {basename, dirname, resolve} from 'path';
 import type {Plugin} from 'rollup';
 
 const SUPPORTED_MANIFEST_EXTENSIONS = ['.manifest.json', '.manifest', '.json'];
-const DEFAULT_MANIFEST_EXTENSION = '.manifest.json';
+const SCRIPTABLE_EXTENSION = '.scriptable';
 const SOURCE_EXT = /\.[tj]sx?$/;
 
-interface ScriptableBundleOptions {
-  /*
-   * The manifest that will be used for all scripts.
-   */
-  manifest?: ScriptableManifest;
-
-  /*
-   * Whether to bundle the manifest with the script.
-   */
-  bundleManifest?:
-    | boolean
-    | {
-        /*
-         * The extension of the manifest file.
-         */
-        extension?: string;
-      };
-}
-
-export default function scriptableBundle(options: ScriptableBundleOptions = {}): Plugin {
-  const bundledManifestExtension =
-    normalizeExtension(typeof options.bundleManifest === 'object' ? options.bundleManifest.extension : null) ||
-    DEFAULT_MANIFEST_EXTENSION;
-
+export default function scriptableBundle(manifest: ScriptableManifest = {}): Plugin {
   return {
     name: 'scriptable',
     renderChunk(code, chunk) {
       const fileFullPath = chunk.facadeModuleId || '';
-      let fileConfig: ScriptableManifest = {};
+      let customManifest: ScriptableManifest = {};
 
       if (fileFullPath) {
         const chunkDir = dirname(fileFullPath);
         const chunkBaseName = basename(fileFullPath, '.js');
-        const configFilePath = SUPPORTED_MANIFEST_EXTENSIONS.map(ext =>
+        const manifestFilePath = SUPPORTED_MANIFEST_EXTENSIONS.map(ext =>
           resolve(chunkDir, `${chunkBaseName}${ext}`),
         ).find(existsSync);
 
-        if (configFilePath && existsSync(configFilePath)) {
+        if (manifestFilePath && existsSync(manifestFilePath)) {
           try {
-            const fileContent = readFileSync(configFilePath, 'utf-8');
-            fileConfig = JSON.parse(fileContent);
+            const fileContent = readFileSync(manifestFilePath, 'utf-8');
+            customManifest = JSON.parse(fileContent);
           } catch (error) {
-            console.warn(`Could not read config file: ${configFilePath}`, error);
+            console.warn(`Could not read config file: ${manifestFilePath}`, error);
           }
         }
       }
 
-      const finalConfig = {...fileConfig, ...options.manifest};
-      const banner = generateBanner(finalConfig);
+      const finalManifest = {...manifest, ...customManifest};
+      const banner = generateBanner(finalManifest);
 
       const result = {
-        ...finalConfig,
+        ...finalManifest,
         script: code,
       };
 
-      if (fileFullPath && options.bundleManifest !== false) {
+      if (fileFullPath) {
         this.emitFile({
           type: 'asset',
-          name: chunk.name.replace(SOURCE_EXT, bundledManifestExtension),
-          fileName: chunk.fileName.replace(SOURCE_EXT, bundledManifestExtension),
+          name: chunk.name.replace(SOURCE_EXT, SCRIPTABLE_EXTENSION),
+          fileName: chunk.fileName.replace(SOURCE_EXT, SCRIPTABLE_EXTENSION),
           source: JSON.stringify(result),
         });
       }
@@ -77,11 +54,4 @@ export default function scriptableBundle(options: ScriptableBundleOptions = {}):
       };
     },
   };
-}
-
-function normalizeExtension<T extends string | undefined | null>(extension: T): T {
-  if (!extension) {
-    return extension;
-  }
-  return extension.replace(/^\.+/, '.').replace(/^([^.])/, '.$1') as T;
 }

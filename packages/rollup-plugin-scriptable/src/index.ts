@@ -1,12 +1,11 @@
 import type {ScriptableManifest} from '@scriptables/manifest';
-import generateBanner from '@scriptables/manifest';
+import {generateBanner} from '@scriptables/manifest';
 import {existsSync, readFileSync} from 'fs';
 import {basename, dirname, resolve} from 'path';
 import type {Plugin} from 'rollup';
 
-export const SUPPORTED_MANIFEST_EXTENSIONS = ['.manifest.json', '.manifest', '.json'];
-export const DEFAULT_MANIFEST_EXTENSION = '.manifest.json';
-
+const SUPPORTED_MANIFEST_EXTENSIONS = ['.manifest.json', '.manifest', '.json'];
+const DEFAULT_MANIFEST_EXTENSION = '.manifest.json';
 const SOURCE_EXT = /\.[tj]sx?$/;
 
 interface ScriptableBundleOptions {
@@ -28,7 +27,7 @@ interface ScriptableBundleOptions {
       };
 }
 
-export function scriptableBundle(options: ScriptableBundleOptions = {}): Plugin {
+export default function scriptableBundle(options: ScriptableBundleOptions = {}): Plugin {
   const bundledManifestExtension =
     normalizeExtension(typeof options.bundleManifest === 'object' ? options.bundleManifest.extension : null) ||
     DEFAULT_MANIFEST_EXTENSION;
@@ -79,8 +78,6 @@ export function scriptableBundle(options: ScriptableBundleOptions = {}): Plugin 
     },
   };
 }
-
-export default scriptableBundle;
 
 function normalizeExtension<T extends string | undefined | null>(extension: T): T {
   if (!extension) {

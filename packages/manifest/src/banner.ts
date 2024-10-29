@@ -24,7 +24,7 @@ export function generateBanner(manifest: ScriptableManifest = {}): string {
     }
   }
 
-  const metaText = Object.keys(bannerMetadata)
+  const manifestText = Object.keys(bannerMetadata)
     .filter(key => !!bannerMetadata[key])
     .map(key => `${key}: ${bannerMetadata[key]};`)
     .join(' ');
@@ -32,8 +32,6 @@ export function generateBanner(manifest: ScriptableManifest = {}): string {
   return (
     `// Variables used by Scriptable.\n` +
     `// These must be at the very top of the file. Do not edit.\n` +
-    `// ${metaText}\n`
+    `// ${manifestText}\n`
   );
 }
-
-export default generateBanner;

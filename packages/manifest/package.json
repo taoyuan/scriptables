@@ -10,6 +10,7 @@
     "banner"
   ],
   "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "engines": {
     "node": ">=16"
@@ -20,7 +21,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "nb-tsc -b",
+    "build": "yarn clean && rollup -c",
     "clean": "del 'scriptables-manifest*.tgz' 'dist/*' '*.tsbuildinfo' 'package'",
     "pretest": "yarn run clean && yarn run build",
     "test": "yarn run pretest && yarn run jest",
@@ -30,10 +31,17 @@
     "@nutol/build": "^0.2.22",
     "@nutol/eslint-config": "^0.2.16",
     "@nutol/ts-config": "^0.2.2",
+    "@rollup/plugin-commonjs": "^28.0.1",
+    "@rollup/plugin-json": "^6.1.0",
+    "@rollup/plugin-node-resolve": "^15.3.0",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.8.2",
     "del-cli": "^6.0.0",
-    "jest": "^29.7.0"
+    "glob": "^11.0.0",
+    "jest": "^29.7.0",
+    "rollup": "^4.24.2",
+    "rollup-plugin-typescript2": "^0.36.0",
+    "typescript": "^5.6.3"
   },
   "files": [
     "README.md",

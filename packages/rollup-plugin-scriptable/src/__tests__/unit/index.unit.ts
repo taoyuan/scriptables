@@ -1,4 +1,4 @@
-import generateBanner, {ScriptableManifest} from '@scriptables/manifest';
+import {generateBanner, type ScriptableManifest} from '@scriptables/manifest';
 import * as fs from 'fs';
 import {join} from 'path';
 import {OutputAsset, OutputChunk, rollup} from 'rollup';

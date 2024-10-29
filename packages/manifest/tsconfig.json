@@ -2,6 +2,8 @@
   "$schema": "http://json.schemastore.org/tsconfig",
   "extends": "@nutol/ts-config/tsconfig.common.json",
   "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
     "outDir": "dist",
     "rootDir": "src"
   },

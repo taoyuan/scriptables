@@ -4,7 +4,6 @@
   "version": "0.3.0",
   "keywords": [],
   "main": "dist/index.js",
-  "module": "dist/index.es.js",
   "types": "./dist/index.d.ts",
   "engines": {
     "node": ">=16"
@@ -15,8 +14,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "rollup -c",
-    "prebuild": "yarn run clean",
+    "build": "nb-tsc -b",
     "clean": "del 'scriptables-rollup-plugin-scriptable*.tgz' 'dist' '*.tsbuildinfo' 'package'",
     "pretest": "yarn run clean && yarn run build",
     "test": "yarn run pretest && yarn run jest",
@@ -24,6 +22,9 @@
   },
   "dependencies": {
     "@scriptables/manifest": "workspace:^"
+  },
+  "peerDependencies": {
+    "rollup": "^1.20.0 || ^2.0.0"
   },
   "devDependencies": {
     "@nutol/build": "^0.2.22",

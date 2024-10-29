@@ -28,7 +28,7 @@ interface ScriptableBundleOptions {
       };
 }
 
-export default function scriptableBundle(options: ScriptableBundleOptions = {}): Plugin {
+export function scriptableBundle(options: ScriptableBundleOptions = {}): Plugin {
   const bundledManifestExtension =
     normalizeExtension(typeof options.bundleManifest === 'object' ? options.bundleManifest.extension : null) ||
     DEFAULT_MANIFEST_EXTENSION;
@@ -79,6 +79,8 @@ export default function scriptableBundle(options: ScriptableBundleOptions = {}):
     },
   };
 }
+
+export default scriptableBundle;
 
 function normalizeExtension<T extends string | undefined | null>(extension: T): T {
   if (!extension) {

@@ -5,7 +5,7 @@ import json from '@rollup/plugin-json';
 import * as glob from 'glob';
 import pkg from './package.json' assert {type: 'json'};
 
-const inputFiles = glob.sync('src/**/*.ts');
+const inputFiles = glob.sync('./src/**/*.ts');
 
 export default {
   input: inputFiles,
@@ -23,6 +23,6 @@ export default {
       entryFileNames: '[name].mjs',
     },
   ],
-  external: [...Object.keys(pkg.dependencies || []), /\.node$/],
+  external: [...Object.keys(pkg.dependencies || []), ...Object.keys(pkg.devDependencies || []), /\.node$/],
   plugins: [resolve(), commonjs(), json(), typescript()],
 };

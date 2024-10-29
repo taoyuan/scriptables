@@ -23,6 +23,6 @@ export default {
       entryFileNames: '[name].mjs',
     },
   ],
-  external: [...Object.keys(pkg.dependencies || []), /\.node$/],
+  external: [...Object.keys(pkg.dependencies || []), ...Object.keys(pkg.devDependencies || []), /\.node$/],
   plugins: [resolve(), commonjs(), json(), typescript()],
 };

@@ -1945,6 +1945,25 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@scriptables/rollup-plugin-scriptable@workspace:packages/rollup-plugin-scriptable":
+  version: 0.0.0-use.local
+  resolution: "@scriptables/rollup-plugin-scriptable@workspace:packages/rollup-plugin-scriptable"
+  dependencies:
+    "@nutol/build": "npm:^0.2.22"
+    "@nutol/eslint-config": "npm:^0.2.16"
+    "@nutol/ts-config": "npm:^0.2.2"
+    "@rollup/plugin-typescript": "npm:^12.1.1"
+    "@scriptables/manifest": "workspace:^"
+    "@types/jest": "npm:^29.5.14"
+    "@types/node": "npm:^22.8.2"
+    "@types/tmp": "npm:^0"
+    del-cli: "npm:^6.0.0"
+    jest: "npm:^29.7.0"
+    rollup: "npm:^4.24.2"
+    tmp: "npm:^0.2.3"
+  languageName: unknown
+  linkType: soft
+
 "@sigstore/bundle@npm:^2.3.2":
   version: 2.3.2
   resolution: "@sigstore/bundle@npm:2.3.2"
@@ -9655,25 +9674,6 @@ __metadata:
   checksum: 10c0/b30b6b072771f0d1e73b4ca5f37bb2944ee09375be9db5f558fcd3310000d29dfcfa93cf7734d75295ad5a7486dc8e40f63089ced1722a664539ffc0c3ece8c6
   languageName: node
   linkType: hard
-
-"rollup-plugin-scriptable@workspace:packages/rollup-plugin-scriptable":
-  version: 0.0.0-use.local
-  resolution: "rollup-plugin-scriptable@workspace:packages/rollup-plugin-scriptable"
-  dependencies:
-    "@nutol/build": "npm:^0.2.22"
-    "@nutol/eslint-config": "npm:^0.2.16"
-    "@nutol/ts-config": "npm:^0.2.2"
-    "@rollup/plugin-typescript": "npm:^12.1.1"
-    "@scriptables/manifest": "workspace:^"
-    "@types/jest": "npm:^29.5.14"
-    "@types/node": "npm:^22.8.2"
-    "@types/tmp": "npm:^0"
-    del-cli: "npm:^6.0.0"
-    jest: "npm:^29.7.0"
-    rollup: "npm:^4.24.2"
-    tmp: "npm:^0.2.3"
-  languageName: unknown
-  linkType: soft
 
 "rollup@npm:^4.24.2":
   version: 4.24.2

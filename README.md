@@ -9,8 +9,9 @@ more efficient and productive.
 This repository is a monorepo containing the following packages:
 
 - [`@scriptable/manifest`](packages/manifest): Utility functions for Scriptable script development.
-- [`rollup-plugin-scriptable`](packages/rollup-plugin-scriptable): A Rollup plugin to create Scriptable bundles.
+- [`@scriptables/rollup-plugin-scriptable`](packages/rollup-plugin-scriptable): A Rollup plugin to create Scriptable
+  bundles.
 
-## Licence
+## License
 
 [Apache-2.0](LICENSE)

@@ -1,5 +1,5 @@
 {
-  "name": "rollup-plugin-scriptable",
+  "name": "@scriptables/rollup-plugin-scriptable",
   "description": "A rollup plugin helps create a Scriptable bundle from your project by automating metadata and comment generation.",
   "version": "0.2.0",
   "keywords": [],
@@ -17,7 +17,7 @@
   "scripts": {
     "build": "rollup -c",
     "prebuild": "yarn run clean",
-    "clean": "del 'rollup-plugin-scriptable*.tgz' 'dist' '*.tsbuildinfo' 'package'",
+    "clean": "del 'scriptables-rollup-plugin-scriptable*.tgz' 'dist' '*.tsbuildinfo' 'package'",
     "pretest": "yarn run clean && yarn run build",
     "test": "yarn run pretest && yarn run jest",
     "jest": "jest --coverage"

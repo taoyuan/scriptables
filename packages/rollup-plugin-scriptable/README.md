@@ -1,4 +1,4 @@
-# rollup-plugin-scriptable
+# @scriptables/rollup-plugin-scriptable
 
 > A rollup plugin helps create a Scriptable bundle from your project by automating manifest and comment generation.
 

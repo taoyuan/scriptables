@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.5.0](https://github.com/taoyuan/scriptables/compare/@scriptables/rollup-plugin-scriptable@0.4.0...@scriptables/rollup-plugin-scriptable@0.5.0) (2024-10-29)
+
+
+### Features
+
+* using rollup to compile ([8962199](https://github.com/taoyuan/scriptables/commit/8962199e57b1b05ede55dea81da7588396eb91f4))
+
+
+
+
+
 # [0.4.0](https://github.com/taoyuan/scriptables/compare/@scriptables/rollup-plugin-scriptable@0.3.0...@scriptables/rollup-plugin-scriptable@0.4.0) (2024-10-29)
 
 

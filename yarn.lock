@@ -1952,6 +1952,7 @@ __metadata:
     "@nutol/build": "npm:^0.2.22"
     "@nutol/eslint-config": "npm:^0.2.16"
     "@nutol/ts-config": "npm:^0.2.2"
+    "@rollup/plugin-json": "npm:^6.1.0"
     "@rollup/plugin-typescript": "npm:^12.1.1"
     "@scriptables/manifest": "workspace:^"
     "@types/jest": "npm:^29.5.14"

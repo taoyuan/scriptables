@@ -1,8 +1,7 @@
-import {existsSync, readFileSync} from 'node:fs';
-import {basename, dirname, resolve} from 'node:path';
-
 import type {ScriptableManifest} from '@scriptables/manifest';
 import generateBanner from '@scriptables/manifest';
+import {existsSync, readFileSync} from 'fs';
+import {basename, dirname, resolve} from 'path';
 import type {Plugin} from 'rollup';
 
 export const SUPPORTED_MANIFEST_EXTENSIONS = ['.manifest.json', '.manifest', '.json'];

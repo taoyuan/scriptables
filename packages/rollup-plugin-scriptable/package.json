@@ -3,7 +3,8 @@
   "description": "A rollup plugin helps create a Scriptable bundle from your project by automating metadata and comment generation.",
   "version": "0.4.0",
   "keywords": [],
-  "main": "dist/index.js",
+  "main": "./dist/index.js",
+  "module": "./dist/index.es.js",
   "types": "./dist/index.d.ts",
   "engines": {
     "node": ">=16"
@@ -14,7 +15,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "nb-tsc -b",
+    "build": "rollup -c",
     "clean": "del 'scriptables-rollup-plugin-scriptable*.tgz' 'dist' '*.tsbuildinfo' 'package'",
     "pretest": "yarn run clean && yarn run build",
     "test": "yarn run pretest && yarn run jest",
@@ -30,6 +31,7 @@
     "@nutol/build": "^0.2.22",
     "@nutol/eslint-config": "^0.2.16",
     "@nutol/ts-config": "^0.2.2",
+    "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-typescript": "^12.1.1",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.8.2",

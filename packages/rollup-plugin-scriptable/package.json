@@ -1,0 +1,47 @@
+{
+  "name": "rollup-plugin-scriptable",
+  "description": "A rollup plugin helps create a Scriptable bundle from your project by automating metadata and comment generation.",
+  "version": "0.1.0",
+  "keywords": [],
+  "main": "dist/index.js",
+  "module": "dist/index.es.js",
+  "types": "./dist/index.d.ts",
+  "engines": {
+    "node": ">=16"
+  },
+  "author": "TY",
+  "license": "Apache-2.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "rollup -c",
+    "prebuild": "yarn run clean",
+    "clean": "del 'rollup-plugin-scriptable*.tgz' 'dist' '*.tsbuildinfo' 'package'",
+    "pretest": "yarn run clean && yarn run build",
+    "test": "yarn run pretest && yarn run jest",
+    "jest": "jest --coverage"
+  },
+  "dependencies": {
+    "@scriptables/manifest": "workspace:^"
+  },
+  "devDependencies": {
+    "@nutol/build": "^0.2.22",
+    "@nutol/eslint-config": "^0.2.16",
+    "@nutol/ts-config": "^0.2.2",
+    "@rollup/plugin-typescript": "^12.1.1",
+    "@types/jest": "^29.5.14",
+    "@types/node": "^22.8.2",
+    "@types/tmp": "^0",
+    "del-cli": "^6.0.0",
+    "jest": "^29.7.0",
+    "rollup": "^4.24.2",
+    "tmp": "^0.2.3"
+  },
+  "files": [
+    "README.md",
+    "dist",
+    "src",
+    "!*/__tests__"
+  ]
+}

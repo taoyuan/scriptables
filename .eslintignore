@@ -1,0 +1,9 @@
+node_modules/
+dist/
+coverage/
+/sandbox
+**/*.d.ts
+*.js
+openapi.json
+openapi.md
+rollup.config.*

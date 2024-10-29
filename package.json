@@ -1,0 +1,79 @@
+{
+  "name": "scriptables",
+  "version": "0.1.0",
+  "description": "Scriptables is a comprehensive toolkit for enhancing Scriptable script development. It offers a range of utilities and tools to streamline the creation, documentation, and optimization of Scriptable scripts, making the development process more efficient and productive.",
+  "private": true,
+  "engines": {
+    "node": ">=14"
+  },
+  "author": "TY",
+  "license": "Apache-2.0",
+  "scripts": {
+    "postinstall": "husky install && yarn build",
+    "prerelease": "yarn build:full && yarn lint",
+    "release": "yarn prerelease &&cross-env CI=1 lerna version && lerna publish from-git --yes",
+    "lint": "yarn prettier:check && yarn eslint",
+    "lint:fix": "yarn prettier:fix && yarn eslint:fix",
+    "eslint": "nb-eslint --report-unused-disable-directives --cache .",
+    "eslint:fix": "yarn eslint --fix",
+    "prettier:cli": "nb-prettier \"**/*.ts\" \"**/*.js\" \"**/*.md\"",
+    "prettier:check": "yarn prettier:cli --check",
+    "prettier:fix": "yarn prettier:cli --write",
+    "clean": "lerna run clean && del 'packages/*/dist'",
+    "clean:lerna": "lerna clean",
+    "build": "lerna run build --sort",
+    "build:full": "yarn install && yarn clean && yarn build",
+    "pretest": "yarn clean && yarn build",
+    "test": "yarn pretest && lerna run test --sort && yarn posttest",
+    "posttest": "yarn lint",
+    "test:ci": "lerna run test --sort"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.5.0",
+    "@commitlint/config-conventional": "^19.5.0",
+    "@commitlint/travis-cli": "^19.5.0",
+    "@nutol/build": "^0.2.22",
+    "@nutol/eslint-config": "^0.2.16",
+    "@nutol/monorepo": "^0.2.15",
+    "@nutol/ts-config": "^0.2.2",
+    "@rollup/plugin-json": "^6.1.0",
+    "@types/jest": "^29.5.14",
+    "@types/node": "^22.8.2",
+    "@typescript-eslint/eslint-plugin": "^5.61.0",
+    "@typescript-eslint/parser": "^5.61.0",
+    "cross-env": "^7.0.3",
+    "cz-conventional-changelog": "^3.3.0",
+    "del-cli": "^6.0.0",
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-eslint-plugin": "^6.3.1",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-jest": "^28.8.3",
+    "eslint-plugin-prettier": "^5.2.1",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
+    "husky": "^9.1.6",
+    "if-env": "^1.0.4",
+    "jest": "^29.7.0",
+    "jest-junit": "^16.0.0",
+    "lerna": "^8.1.8",
+    "lint-staged": "^15.2.10",
+    "prettier": "^3.3.3",
+    "ts-jest": "^29.2.5",
+    "typescript": "^5.6.3"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+      "pre-commit": "if-env LINT_STAGED=0 && echo \"lint-staged disabled via LINT_STAGED env var\" || lint-staged"
+    }
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "packageManager": "yarn@4.5.1"
+}

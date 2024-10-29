@@ -1,7 +1,7 @@
 {
   "name": "@scriptables/rollup-plugin-scriptable",
   "description": "A rollup plugin helps create a Scriptable bundle from your project by automating metadata and comment generation.",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "keywords": [],
   "main": "dist/index.js",
   "module": "dist/index.es.js",

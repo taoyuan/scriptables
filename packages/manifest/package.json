@@ -1,6 +1,6 @@
 {
   "name": "@scriptables/manifest",
-  "description": "@scriptables/manifest is a toolkit designed to streamline Scriptable script development by automating metadata and comment generation for better documentation and maintainability.",
+  "description": "An utilities to generate, parse, and update manifest headers in Scriptable scripts.",
   "version": "0.2.2",
   "keywords": [
     "scriptable",

@@ -8,7 +8,7 @@ import {
   isScriptableBanner,
   isStaticBanner,
   matchAllBannerManifest,
-  updateScriptableManifest,
+  mergeScriptableBanner,
 } from '../../manifest';
 import {ScriptableManifest} from '../../types';
 
@@ -464,10 +464,10 @@ describe('manifest', () => {
         },
       };
 
-      const [banner, updatedScript] = updateScriptableManifest(script, manifest);
+      const [banner, mergedScript] = mergeScriptableBanner(script, manifest);
       expect(banner).toContain('icon-color: red;');
       expect(banner).toContain('icon-glyph: square;');
-      expect(updatedScript).toContain('// Your script code here...');
+      expect(mergedScript).toContain('// Your script code here...');
     });
 
     it('should add a new manifest if none exists', () => {
@@ -480,10 +480,10 @@ describe('manifest', () => {
         },
       };
 
-      const [banner, updatedScript] = updateScriptableManifest(script, manifest);
+      const [banner, mergedScript] = mergeScriptableBanner(script, manifest);
       expect(banner).toContain('icon-color: red;');
       expect(banner).toContain('icon-glyph: square;');
-      expect(updatedScript).toBe(script);
+      expect(mergedScript).toBe(script);
     });
 
     it('should preserve static banner lines', () => {
@@ -501,9 +501,9 @@ describe('manifest', () => {
         },
       };
 
-      const [banner, updatedScript] = updateScriptableManifest(script, manifest);
+      const [banner, mergedScript] = mergeScriptableBanner(script, manifest);
       expect(banner).toContain(SCRIPTABLE_BANNER_STATIC_LINES[0]);
-      expect(updatedScript).toContain('// Your script code here...');
+      expect(mergedScript).toContain('// Your script code here...');
     });
 
     it('should handle empty manifest', () => {
@@ -516,10 +516,10 @@ describe('manifest', () => {
 
       const manifest: Partial<ScriptableManifest> = {};
 
-      const [banner, updatedScript] = updateScriptableManifest(script, manifest);
-      expect(banner).toContain('icon-color: ;');
-      expect(banner).toContain('icon-glyph: ;');
-      expect(updatedScript).toContain('// Your script code here...');
+      const [banner, mergedScript] = mergeScriptableBanner(script, manifest);
+      expect(banner).toContain('icon-color: blue;');
+      expect(banner).toContain('icon-glyph: circle;');
+      expect(mergedScript).toContain('// Your script code here...');
     });
 
     it('should handle script without static banner lines', () => {
@@ -530,19 +530,19 @@ describe('manifest', () => {
           glyph: 'square',
         },
       };
-      const [banner, updatedScript] = updateScriptableManifest(script, manifest);
+      const [banner, mergedScript] = mergeScriptableBanner(script, manifest);
       expect(banner).toContain('icon-color: red;');
       expect(banner).toContain('icon-glyph: square;');
-      expect(updatedScript).toContain("console.log('Hello, world!');");
+      expect(mergedScript).toContain("console.log('Hello, world!');");
     });
 
     it('should handle script with no manifest attributes', () => {
       const script = `// Variables used by Scriptable.\n// These must be at the very top of the file. Do not edit.\n// icon-color: blue; icon-glyph: circle;\nconsole.log('Hello, world!');\n`;
       const manifest: Partial<ScriptableManifest> = {};
-      const [banner, updatedScript] = updateScriptableManifest(script, manifest);
-      expect(banner).toContain('icon-color: ;');
-      expect(banner).toContain('icon-glyph: ;');
-      expect(updatedScript).toContain("console.log('Hello, world!');");
+      const [banner, mergedScript] = mergeScriptableBanner(script, manifest);
+      expect(banner).toContain('icon-color: blue;');
+      expect(banner).toContain('icon-glyph: circle;');
+      expect(mergedScript).toContain("console.log('Hello, world!');");
     });
 
     it('should update the manifest in the script with all attributes', () => {
@@ -562,12 +562,12 @@ describe('manifest', () => {
         share_sheet_inputs: ['plain-text', 'url'],
       };
 
-      const [banner, updatedScript] = updateScriptableManifest(script, manifest);
+      const [banner, mergedScript] = mergeScriptableBanner(script, manifest);
       expect(banner).toContain('icon-color: red;');
       expect(banner).toContain('icon-glyph: square;');
       expect(banner).toContain('always-run-in-app: true;');
       expect(banner).toContain('share-sheet-inputs: plain-text, url;');
-      expect(updatedScript).toContain('// Your script code here...');
+      expect(mergedScript).toContain('// Your script code here...');
     });
 
     it('should update the manifest in the script with always_run_in_app is false', () => {
@@ -587,12 +587,32 @@ describe('manifest', () => {
         share_sheet_inputs: ['plain-text', 'url'],
       };
 
-      const [banner, updatedScript] = updateScriptableManifest(script, manifest);
+      const [banner, mergedScript] = mergeScriptableBanner(script, manifest);
       expect(banner).toContain('icon-color: red;');
       expect(banner).toContain('icon-glyph: square;');
       expect(banner).toContain('always-run-in-app: false;');
       expect(banner).toContain('share-sheet-inputs: plain-text, url;');
-      expect(updatedScript).toContain('// Your script code here...');
+      expect(mergedScript).toContain('// Your script code here...');
+    });
+
+    it('should update the banner using the manifest extracted from the old script', () => {
+      const oldScript = `// Variables used by Scriptable.
+    // These must be at the very top of the file. Do not edit.
+    // icon-color: blue; icon-glyph: circle;
+
+    console.log('Hello world');`;
+
+      const newScript = `// Variables used by Scriptable.
+    // These must be at the very top of the file. Do not edit.
+    // icon-color: red; icon-glyph: square;
+
+    console.log('Hello world');`;
+
+      const [banner, mergedScript] = mergeScriptableBanner(newScript, oldScript);
+
+      expect(banner).toContain('icon-color: blue;');
+      expect(banner).toContain('icon-glyph: circle;');
+      expect(mergedScript).toContain("console.log('Hello world');");
     });
   });
 });

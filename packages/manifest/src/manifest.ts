@@ -114,7 +114,7 @@ export function extractScriptableManifest(
  * Update the manifest text for a Scriptable script.
  *
  * @param script The script to update.
- * @param manifest The source manifest.
+ * @param manifestOrOldScript The manifest to update the script with, or the old script to extract the manifest from.
  * @returns The updated script with the manifest text.
  * @example
  *
@@ -133,11 +133,19 @@ export function extractScriptableManifest(
  *   },
  * };
  *
- * const [banner, updatedScript] = updateScriptableManifest(manifest, script);
- * console.log(updatedScript);
+ * const [banner, mergedScript] = mergeScriptableBanner(manifest, script);
+ * console.log(mergedScript);
  * ```
  */
-export function updateScriptableManifest(script: string, manifest: Partial<ScriptableManifest>): [string, string] {
+export function mergeScriptableBanner(
+  script: string,
+  manifestOrOldScript?: Partial<ScriptableManifest> | string,
+): [string, string] {
+  const manifest =
+    typeof manifestOrOldScript === 'string'
+      ? extractScriptableManifest(manifestOrOldScript, ['icon-color', 'icon-glyph'])
+      : manifestOrOldScript;
+
   let banner = '';
   let scriptNew = script;
   const newLines = scriptNew.split('\n');
@@ -152,22 +160,24 @@ export function updateScriptableManifest(script: string, manifest: Partial<Scrip
       } else if ((matches = matchAllBannerManifest(line)) && matches.length) {
         scriptNew = scriptNew.substring(line.length + 1);
 
-        for (const m of matches) {
-          const [, key, value] = m;
-          switch (key as ScriptableBannerManifestKeys) {
-            case 'always-run-in-app':
-              if (manifest.always_run_in_app !== undefined)
-                line = line.replace(value, manifest.always_run_in_app ? 'true' : 'false');
-              break;
-            case 'share-sheet-inputs':
-              if (manifest.share_sheet_inputs) line = line.replace(value, manifest.share_sheet_inputs.join(', '));
-              break;
-            case 'icon-color':
-              line = line.replace(value, manifest.icon?.color || '');
-              break;
-            case 'icon-glyph':
-              line = line.replace(value, manifest.icon?.glyph || '');
-              break;
+        if (manifest) {
+          for (const m of matches) {
+            const [, key, value] = m;
+            switch (key as ScriptableBannerManifestKeys) {
+              case 'always-run-in-app':
+                if (manifest.always_run_in_app !== undefined)
+                  line = line.replace(value, manifest.always_run_in_app ? 'true' : 'false');
+                break;
+              case 'share-sheet-inputs':
+                if (manifest.share_sheet_inputs) line = line.replace(value, manifest.share_sheet_inputs.join(', '));
+                break;
+              case 'icon-color':
+                if (manifest.icon?.color) line = line.replace(value, manifest.icon?.color);
+                break;
+              case 'icon-glyph':
+                if (manifest.icon?.glyph) line = line.replace(value, manifest.icon?.glyph);
+                break;
+            }
           }
         }
 

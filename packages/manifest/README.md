@@ -70,12 +70,12 @@ const manifest = extractScriptableManifest(script);
 // Result: { icon: { color: 'red', glyph: 'square' } }
 ```
 
-#### `updateScriptableManifest(script: string, manifest: Partial<ScriptableManifest>): [string, string]`
+#### `mergeScriptableBanner(script: string, manifestOrOldScript?: Partial<ScriptableManifest> | string): [string, string]`
 
-Updates an existing script's manifest with new settings. Returns a tuple of [banner, updatedScript].
+Updates an existing script's manifest with new settings. Returns a tuple of [banner, mergedScript].
 
 ```typescript
-const [banner, updatedScript] = updateScriptableManifest(script, {
+const [banner, mergedScript] = mergeScriptableBanner(script, {
   icon: {
     color: 'blue',
     glyph: 'circle',
@@ -117,7 +117,7 @@ enum ScriptableBannerManifestKeys {
 ### Basic Usage
 
 ```typescript
-import {generateScriptableBanner, updateScriptableManifest} from '@scriptables/manifest';
+import {generateScriptableBanner, mergeScriptableBanner} from '@scriptables/manifest';
 
 // Generate a new banner
 const manifest = {
@@ -135,13 +135,13 @@ const script = `// Variables used by Scriptable.
 
 console.log('Hello world');`;
 
-const [newBanner, updatedScript] = updateScriptableManifest(script, manifest);
+const [newBanner, mergedScript] = mergeScriptableBanner(script, manifest);
 ```
 
 ### Extract and Modify Manifest
 
 ```typescript
-import {extractScriptableManifest, updateScriptableManifest} from '@scriptables/manifest';
+import {extractScriptableManifest, mergeScriptableBanner} from '@scriptables/manifest';
 
 // Extract existing manifest
 const script = `// Variables used by Scriptable.
@@ -156,7 +156,27 @@ const manifest = extractScriptableManifest(script);
 manifest.icon.color = 'red';
 
 // Update script with modified manifest
-const [newBanner, updatedScript] = updateScriptableManifest(script, manifest);
+const [newBanner, mergedScript] = mergeScriptableBanner(script, manifest);
+```
+
+### Merge with old script
+
+```typescript
+import {mergeScriptableBanner} from '@scriptables/manifest';
+
+const oldScript = `// Variables used by Scriptable.
+// These must be at the very top of the file. Do not edit.
+// icon-color: blue; icon-glyph: circle;
+
+console.log('Hello world');`;
+
+const newScript = `// Variables used by Scriptable.
+// These must be at the very top of the file. Do not edit.
+// icon-color: red; icon-glyph: square;
+
+console.log('Hello world');`;
+
+const [newBanner, mergedScript] = mergeScriptableBanner(newScript, oldScript);
 ```
 
 ## Contributing

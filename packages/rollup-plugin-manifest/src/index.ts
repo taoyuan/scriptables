@@ -1,5 +1,4 @@
-import type {ScriptableManifest} from '@scriptables/manifest';
-import {generateBanner} from '@scriptables/manifest';
+import {generateScriptableBanner, ScriptableManifest} from '@scriptables/manifest';
 import {existsSync, readFileSync} from 'fs';
 import {basename, dirname, resolve} from 'path';
 import type {Plugin} from 'rollup';
@@ -8,20 +7,16 @@ const SUPPORTED_MANIFEST_EXTENSIONS = ['.manifest.json', '.manifest', '.json'];
 const SCRIPTABLE_EXTENSION = '.scriptable';
 const SOURCE_EXT = /\.[tj]sx?$/;
 
-export interface NamedScriptableManifest extends ScriptableManifest {
-  name?: string;
-}
-
-export default function scriptableBundle(manifest: NamedScriptableManifest = {}): Plugin {
+export default function bundle(manifest: ScriptableManifest = {}): Plugin {
   return {
     name: 'scriptable',
     renderChunk(code, chunk) {
-      const fileFullPath = chunk.facadeModuleId || '';
-      let customManifest: NamedScriptableManifest = {};
+      const path = chunk.facadeModuleId;
+      let customManifest: ScriptableManifest = {};
 
-      if (fileFullPath) {
-        const chunkDir = dirname(fileFullPath);
-        const chunkBaseName = basename(fileFullPath, '.js');
+      if (path) {
+        const chunkDir = dirname(path);
+        const chunkBaseName = basename(path, '.js');
         const manifestFilePath = SUPPORTED_MANIFEST_EXTENSIONS.map(ext =>
           resolve(chunkDir, `${chunkBaseName}${ext}`),
         ).find(existsSync);
@@ -37,14 +32,14 @@ export default function scriptableBundle(manifest: NamedScriptableManifest = {})
       }
 
       const finalManifest = {...manifest, ...customManifest};
-      const banner = generateBanner(finalManifest);
+      const banner = generateScriptableBanner(finalManifest);
 
       const result = {
         ...finalManifest,
         script: code,
       };
 
-      if (fileFullPath) {
+      if (path) {
         this.emitFile({
           type: 'asset',
           name: chunk.name.replace(SOURCE_EXT, SCRIPTABLE_EXTENSION),

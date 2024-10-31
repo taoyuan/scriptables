@@ -1,12 +1,12 @@
-import {generateBanner, type ScriptableManifest} from '@scriptables/manifest';
+import {generateScriptableBanner, ScriptableManifest} from '@scriptables/manifest';
 import * as fs from 'fs';
 import {join} from 'path';
 import {OutputAsset, OutputChunk, rollup} from 'rollup';
 import tmp from 'tmp';
 
-import scriptableBundle, {NamedScriptableManifest} from '../..';
+import bundle from '../..';
 
-describe('scriptableBundle', () => {
+describe('bundle', () => {
   const mockManifest: ScriptableManifest = {icon: {color: 'blue', glyph: 'star'}};
   const mockCode = 'console.log("Hello, world!");';
   let tmpDir: tmp.DirResult;
@@ -21,7 +21,7 @@ describe('scriptableBundle', () => {
   });
 
   it('should generate a banner and emit a scriptable file', async () => {
-    const plugin = scriptableBundle(mockManifest);
+    const plugin = bundle(mockManifest);
     const inputFilePath = join(tmpDir.name, 'input.js');
     fs.writeFileSync(inputFilePath, mockCode);
 
@@ -33,17 +33,17 @@ describe('scriptableBundle', () => {
     const configFilePath = join(tmpDir.name, 'input.manifest');
     fs.writeFileSync(configFilePath, JSON.stringify(fileConfig));
 
-    const bundle = await rollup({
+    const rollupBuild = await rollup({
       input: inputFilePath,
       plugins: [plugin],
     });
 
-    const {output} = await bundle.generate({
+    const {output} = await rollupBuild.generate({
       format: 'es',
     });
     const [scriptChunk, scriptableAsset] = output as [OutputChunk, OutputAsset];
 
-    const expectedBanner = generateBanner({...fileConfig, ...mockManifest} as ScriptableManifest);
+    const expectedBanner = generateScriptableBanner({...fileConfig, ...mockManifest} as ScriptableManifest);
 
     expect(scriptChunk.fileName).toBe('input.js');
     expect(scriptChunk.type).toBe('chunk');
@@ -57,21 +57,21 @@ describe('scriptableBundle', () => {
   });
 
   it('should handle missing config file gracefully', async () => {
-    const plugin = scriptableBundle(mockManifest);
+    const plugin = bundle(mockManifest);
     const inputFilePath = join(tmpDir.name, 'input.js');
     fs.writeFileSync(inputFilePath, mockCode);
 
-    const bundle = await rollup({
+    const rollupBuild = await rollup({
       input: inputFilePath,
       plugins: [plugin],
     });
 
-    const {output} = await bundle.generate({
+    const {output} = await rollupBuild.generate({
       format: 'es',
     });
     const [scriptChunk, scriptableAsset] = output as [OutputChunk, OutputAsset];
 
-    const expectedBanner = generateBanner(mockManifest);
+    const expectedBanner = generateScriptableBanner(mockManifest);
 
     expect(scriptChunk.code).toContain(expectedBanner);
     expect(scriptChunk.code).toContain(mockCode);
@@ -81,21 +81,21 @@ describe('scriptableBundle', () => {
   });
 
   it('should use default options when no parameters are passed', async () => {
-    const plugin = scriptableBundle();
+    const plugin = bundle();
     const inputFilePath = join(tmpDir.name, 'input.js');
     fs.writeFileSync(inputFilePath, mockCode);
 
-    const bundle = await rollup({
+    const rollupBuild = await rollup({
       input: inputFilePath,
       plugins: [plugin],
     });
 
-    const {output} = await bundle.generate({
+    const {output} = await rollupBuild.generate({
       format: 'es',
     });
     const [scriptChunk, scriptableAsset] = output as [OutputChunk, OutputAsset];
 
-    const expectedBanner = generateBanner();
+    const expectedBanner = generateScriptableBanner();
 
     expect(scriptChunk.code).toContain(expectedBanner);
     expect(scriptChunk.code).toContain(mockCode);
@@ -105,7 +105,7 @@ describe('scriptableBundle', () => {
   });
 
   it('should warn if manifest file cannot be read', async () => {
-    const plugin = scriptableBundle(mockManifest);
+    const plugin = bundle(mockManifest);
     const inputFilePath = join(tmpDir.name, 'input.js');
     fs.writeFileSync(inputFilePath, mockCode);
 
@@ -114,12 +114,12 @@ describe('scriptableBundle', () => {
 
     const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation();
 
-    const bundle = await rollup({
+    const rollupBuild = await rollup({
       input: inputFilePath,
       plugins: [plugin],
     });
 
-    await bundle.generate({
+    await rollupBuild.generate({
       format: 'es',
     });
 
@@ -132,16 +132,16 @@ describe('scriptableBundle', () => {
   });
 
   it('should use default schema extension if not provided', async () => {
-    const plugin = scriptableBundle(mockManifest);
+    const plugin = bundle(mockManifest);
     const inputFilePath = join(tmpDir.name, 'input.js');
     fs.writeFileSync(inputFilePath, mockCode);
 
-    const bundle = await rollup({
+    const rollupBuild = await rollup({
       input: inputFilePath,
       plugins: [plugin],
     });
 
-    const {output} = await bundle.generate({
+    const {output} = await rollupBuild.generate({
       format: 'es',
     });
     const [, scriptableAsset] = output as [OutputChunk, OutputAsset];
@@ -150,16 +150,16 @@ describe('scriptableBundle', () => {
   });
 
   it('should use custom schema extension if provided', async () => {
-    const plugin = scriptableBundle(mockManifest);
+    const plugin = bundle(mockManifest);
     const inputFilePath = join(tmpDir.name, 'input.js');
     fs.writeFileSync(inputFilePath, mockCode);
 
-    const bundle = await rollup({
+    const rollupBuild = await rollup({
       input: inputFilePath,
       plugins: [plugin],
     });
 
-    const {output} = await bundle.generate({
+    const {output} = await rollupBuild.generate({
       format: 'es',
     });
     const [, scriptableAsset] = output as [OutputChunk, OutputAsset];
@@ -168,21 +168,21 @@ describe('scriptableBundle', () => {
   });
 
   it('should build manifest when buildManifest option is true', async () => {
-    const plugin = scriptableBundle(mockManifest);
+    const plugin = bundle(mockManifest);
     const inputFilePath = join(tmpDir.name, 'input.js');
     fs.writeFileSync(inputFilePath, mockCode);
 
-    const bundle = await rollup({
+    const rollupBuild = await rollup({
       input: inputFilePath,
       plugins: [plugin],
     });
 
-    const {output} = await bundle.generate({
+    const {output} = await rollupBuild.generate({
       format: 'es',
     });
     const [scriptChunk, scriptableAsset] = output as [OutputChunk, OutputAsset];
 
-    const expectedBanner = generateBanner(mockManifest);
+    const expectedBanner = generateScriptableBanner(mockManifest);
 
     expect(scriptChunk.code).toContain(expectedBanner);
     expect(scriptChunk.code).toContain(mockCode);
@@ -192,7 +192,7 @@ describe('scriptableBundle', () => {
   });
 
   it('should prioritize manifest extensions correctly', async () => {
-    const plugin = scriptableBundle(mockManifest);
+    const plugin = bundle(mockManifest);
     const inputFilePath = join(tmpDir.name, 'input.js');
     fs.writeFileSync(inputFilePath, mockCode);
 
@@ -208,24 +208,24 @@ describe('scriptableBundle', () => {
       fs.writeFileSync(manifestPath, JSON.stringify(content));
     });
 
-    const bundle = await rollup({
+    const rollupBuild = await rollup({
       input: inputFilePath,
       plugins: [plugin],
     });
 
-    const {output} = await bundle.generate({
+    const {output} = await rollupBuild.generate({
       format: 'es',
     });
     const [scriptChunk] = output as [OutputChunk];
 
-    const expectedBanner = generateBanner({...mockManifest, always_run_in_app: true});
+    const expectedBanner = generateScriptableBanner({...mockManifest, always_run_in_app: true});
 
     expect(scriptChunk.code).toContain(expectedBanner);
     expect(scriptChunk.code).toContain(mockCode);
   });
 
   it('should generate banners and emit scriptable files for multiple scripts', async () => {
-    const plugin = scriptableBundle(mockManifest);
+    const plugin = bundle(mockManifest);
     const mockCode1 = 'console.log("Hello, world 1!");';
     const mockCode2 = 'console.log("Hello, world 2!");';
     const inputFilePath1 = join(tmpDir.name, 'input1.js');
@@ -233,12 +233,12 @@ describe('scriptableBundle', () => {
     fs.writeFileSync(inputFilePath1, mockCode1);
     fs.writeFileSync(inputFilePath2, mockCode2);
 
-    const bundle = await rollup({
+    const rollupBuild = await rollup({
       input: [inputFilePath1, inputFilePath2],
       plugins: [plugin],
     });
 
-    const {output} = await bundle.generate({
+    const {output} = await rollupBuild.generate({
       format: 'es',
     });
 
@@ -249,7 +249,7 @@ describe('scriptableBundle', () => {
     expect(scriptableAssets.length).toBe(2);
 
     scriptChunks.forEach((chunk, index) => {
-      const expectedBanner = generateBanner(mockManifest);
+      const expectedBanner = generateScriptableBanner(mockManifest);
       expect(chunk.code).toContain(expectedBanner);
       expect(chunk.code).toContain(index === 0 ? mockCode1 : mockCode2);
     });
@@ -261,22 +261,22 @@ describe('scriptableBundle', () => {
   });
 
   it('should include the name property in the generated scriptable file', async () => {
-    const manifest: NamedScriptableManifest = {name: 'Test Script', icon: {color: 'blue', glyph: 'star'}};
-    const plugin = scriptableBundle(manifest);
+    const manifest: ScriptableManifest = {name: 'Test Script', icon: {color: 'blue', glyph: 'star'}};
+    const plugin = bundle(manifest);
     const inputFilePath = join(tmpDir.name, 'input.js');
     fs.writeFileSync(inputFilePath, mockCode);
 
-    const bundle = await rollup({
+    const rollupBuild = await rollup({
       input: inputFilePath,
       plugins: [plugin],
     });
 
-    const {output} = await bundle.generate({
+    const {output} = await rollupBuild.generate({
       format: 'es',
     });
     const [scriptChunk, scriptableAsset] = output as [OutputChunk, OutputAsset];
 
-    const expectedBanner = generateBanner(manifest);
+    const expectedBanner = generateScriptableBanner(manifest);
 
     expect(scriptChunk.code).toContain(expectedBanner);
     expect(scriptChunk.code).toContain(mockCode);
@@ -286,8 +286,8 @@ describe('scriptableBundle', () => {
   });
 
   it('should include the name property from the manifest file in the generated scriptable file', async () => {
-    const manifest: NamedScriptableManifest = {icon: {color: 'blue', glyph: 'star'}};
-    const plugin = scriptableBundle(manifest);
+    const manifest: ScriptableManifest = {icon: {color: 'blue', glyph: 'star'}};
+    const plugin = bundle(manifest);
     const inputFilePath = join(tmpDir.name, 'input.js');
     fs.writeFileSync(inputFilePath, mockCode);
 
@@ -299,17 +299,17 @@ describe('scriptableBundle', () => {
     const configFilePath = join(tmpDir.name, 'input.manifest');
     fs.writeFileSync(configFilePath, JSON.stringify(fileManifest));
 
-    const bundle = await rollup({
+    const rollupBuild = await rollup({
       input: inputFilePath,
       plugins: [plugin],
     });
 
-    const {output} = await bundle.generate({
+    const {output} = await rollupBuild.generate({
       format: 'es',
     });
     const [scriptChunk, scriptableAsset] = output as [OutputChunk, OutputAsset];
 
-    const expectedBanner = generateBanner({...fileManifest, ...manifest} as ScriptableManifest);
+    const expectedBanner = generateScriptableBanner({...fileManifest, ...manifest} as ScriptableManifest);
 
     expect(scriptChunk.code).toContain(expectedBanner);
     expect(scriptChunk.code).toContain(mockCode);

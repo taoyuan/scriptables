@@ -1,4 +1,4 @@
-# @scriptables/rollup-plugin-scriptable
+# @scriptables/rollup-plugin-manifest
 
 > A rollup plugin helps create a Scriptable bundle from your project by automating manifest and comment generation.
 
@@ -7,9 +7,9 @@
 To install the plugin, use npm or yarn:
 
 ```sh
-npm install rollup-plugin-scriptable --save-dev
+npm install rollup-plugin-manifest --save-dev
 # or
-yarn add rollup-plugin-scriptable --dev
+yarn add rollup-plugin-manifest --dev
 ```
 
 ## Usage
@@ -17,7 +17,7 @@ yarn add rollup-plugin-scriptable --dev
 Add the plugin to your `rollup.config.js`:
 
 ```javascript
-import scriptableBundle from 'rollup-plugin-scriptable';
+import bundle from 'rollup-plugin-manifest';
 
 export default {
   input: 'src/index.js',
@@ -25,9 +25,9 @@ export default {
     file: 'dist/bundle.js',
     format: 'es',
   },
-  plugins: [scriptableBundle()],
+  plugins: [bundle()],
   // or customize the manifest file extension
-  // plugins: [scriptableBundle({ manifest: mockManifest, bundleManifest: { extension: '.json' } })],
+  // plugins: [bundle({ manifest: mockManifest, bundleManifest: { extension: '.json' } })],
 };
 ```
 
@@ -42,7 +42,7 @@ The plugin accepts the following options:
 ## Example
 
 ```javascript
-import scriptableBundle from 'rollup-plugin-scriptable';
+import bundle from 'rollup-plugin-manifest';
 
 const mockManifest = {
   name: 'Example Script',
@@ -56,14 +56,14 @@ export default {
     format: 'es',
   },
   // disable manifest bundling
-  plugins: [scriptableBundle({manifest: mockManifest, bundleManifest: false})],
+  plugins: [bundle({manifest: mockManifest, bundleManifest: false})],
 };
 ```
 
 ## Acknowledgements
 
 Portions of code and functionality are referenced from the
-[rollup-plugin-scriptable](https://github.com/jag-k/rollup-plugin-scriptable) project. Many thanks!
+[rollup-plugin-manifest](https://github.com/jag-k/rollup-plugin-manifest) project. Many thanks!
 
 ## License
 

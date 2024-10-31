@@ -7,3 +7,4 @@ coverage/
 openapi.json
 openapi.md
 rollup.config.*
+examples/

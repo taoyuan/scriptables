@@ -41,7 +41,7 @@ console.log(banner);
 ## Acknowledgements
 
 Portions of code and functionality are referenced from the
-[rollup-plugin-scriptable](https://github.com/jag-k/rollup-plugin-scriptable) project. Many thanks!
+[rollup-plugin-manifest](https://github.com/jag-k/rollup-plugin-manifest) project. Many thanks!
 
 ## License
 

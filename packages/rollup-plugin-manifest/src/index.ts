@@ -1,4 +1,5 @@
-import {generateScriptableBanner, ScriptableManifest} from '@scriptables/manifest';
+import {ScriptableManifest} from '@scriptables/manifest';
+import {generateScriptableBanner} from '@scriptables/manifest/generateScriptableBanner';
 import {existsSync, readFileSync} from 'fs';
 import {basename, dirname, extname, resolve} from 'path';
 import type {Plugin} from 'rollup';

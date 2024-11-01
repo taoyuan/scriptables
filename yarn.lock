@@ -1996,7 +1996,6 @@ __metadata:
     del-cli: "npm:^6.0.0"
     jest: "npm:^29.7.0"
     rollup: "npm:^4.24.3"
-    rollup-plugin-typescript2: "npm:^0.36.0"
     tmp: "npm:^0.2.3"
   peerDependencies:
     rollup: ^1.20.0 || ^2.0.0

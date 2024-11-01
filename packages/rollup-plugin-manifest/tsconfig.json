@@ -3,7 +3,8 @@
   "extends": "@nutol/ts-config/tsconfig.common.json",
   "compilerOptions": {
     "target": "ESNext",
-    "module": "ESNext",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
     "outDir": "dist",
     "rootDir": "src"
   },

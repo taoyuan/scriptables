@@ -1,21 +1,19 @@
+import {bannerManifestRegex} from '../../bannerManifestRegex';
 import {SCRIPTABLE_BANNER_STATIC_LINES} from '../../consts';
-import {
-  buildBannerManifestRegex,
-  extractScriptableManifest,
-  generateManifestText,
-  generateScriptableBanner,
-  hasBannerManifest,
-  isScriptableBanner,
-  isStaticBanner,
-  matchAllBannerManifest,
-  mergeScriptableBanner,
-} from '../../manifest';
+import {extractScriptableManifest} from '../../extractScriptableManifest';
+import {generateManifestText} from '../../generateManifestText';
+import {generateScriptableBanner} from '../../generateScriptableBanner';
+import {hasBannerManifest} from '../../hasBannerManifest';
+import {isScriptableBanner} from '../../isScriptableBanner';
+import {isStaticBanner} from '../../isStaticBanner';
+import {matchAllBannerManifest} from '../../matchAllBannerManifest';
+import {mergeScriptableBanner} from '../../mergeScriptableBanner';
 import {ScriptableManifest} from '../../types';
 
 describe('manifest', () => {
   describe('buildBannerManifestRegex', () => {
     it('should generate regex for a single attribute', () => {
-      const regex = buildBannerManifestRegex(['icon-color']);
+      const regex = bannerManifestRegex(['icon-color']);
       const testString = '// icon-color: red;';
       const matches = [...testString.matchAll(regex)];
       expect(matches).not.toBeNull();
@@ -27,7 +25,7 @@ describe('manifest', () => {
     });
 
     it('should generate regex for multiple attributes', () => {
-      const regex = buildBannerManifestRegex(['icon-color', 'icon-glyph']);
+      const regex = bannerManifestRegex(['icon-color', 'icon-glyph']);
       const testString = '// icon-glyph: circle;';
       const matches = [...testString.matchAll(regex)];
       expect(matches).not.toBeNull();
@@ -39,7 +37,7 @@ describe('manifest', () => {
     });
 
     it('should generate regex for attributes with special characters', () => {
-      const regex = buildBannerManifestRegex(['always-run-in-app', 'share-sheet-inputs']);
+      const regex = bannerManifestRegex(['always-run-in-app', 'share-sheet-inputs']);
       const testString = '// always-run-in-app: true;';
       const matches = [...testString.matchAll(regex)];
       expect(matches).not.toBeNull();
@@ -51,14 +49,14 @@ describe('manifest', () => {
     });
 
     it('should return null for no matching attributes', () => {
-      const regex = buildBannerManifestRegex(['icon-color']);
+      const regex = bannerManifestRegex(['icon-color']);
       const testString = '// icon-glyph: circle;';
       const matches = testString.match(regex);
       expect(matches).toBeNull();
     });
 
     it('should return all for empty attributes array', () => {
-      const regex = buildBannerManifestRegex([]);
+      const regex = bannerManifestRegex([]);
       const testString =
         '// icon-glyph: circle; icon-color: red; always-run-in-app: true; share-sheet-inputs: file-url, url;';
       const matches = testString.matchAll(regex);
@@ -72,7 +70,7 @@ describe('manifest', () => {
     });
 
     it('should return all wihtout attributes', () => {
-      const regex = buildBannerManifestRegex();
+      const regex = bannerManifestRegex();
       const testString =
         '// icon-glyph: circle; icon-color: red; always-run-in-app: true; share-sheet-inputs: file-url, url;';
       const matches = testString.matchAll(regex);

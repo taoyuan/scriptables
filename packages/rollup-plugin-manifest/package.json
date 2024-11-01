@@ -41,7 +41,6 @@
     "del-cli": "^6.0.0",
     "jest": "^29.7.0",
     "rollup": "^4.24.3",
-    "rollup-plugin-typescript2": "^0.36.0",
     "tmp": "^0.2.3"
   },
   "files": [

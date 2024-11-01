@@ -43,6 +43,73 @@
     "rollup-plugin-typescript2": "^0.36.0",
     "typescript": "^5.6.3"
   },
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./bannerManifestRegex": {
+      "import": "./dist/bannerManifestRegex.mjs",
+      "require": "./dist/bannerManifestRegex.js",
+      "types": "./dist/bannerManifestRegex.d.ts"
+    },
+    "./consts": {
+      "import": "./dist/consts.mjs",
+      "require": "./dist/consts.js",
+      "types": "./dist/consts.d.ts"
+    },
+    "./extractBannerManifest": {
+      "import": "./dist/extractBannerManifest.mjs",
+      "require": "./dist/extractBannerManifest.js",
+      "types": "./dist/extractBannerManifest.d.ts"
+    },
+    "./generateScriptableBanner": {
+      "import": "./dist/generateScriptableBanner.mjs",
+      "require": "./dist/generateScriptableBanner.js",
+      "types": "./dist/generateScriptableBanner.d.ts"
+    },
+    "./generateManifestText": {
+      "import": "./dist/generateManifestText.mjs",
+      "require": "./dist/generateManifestText.js",
+      "types": "./dist/generateManifestText.d.ts"
+    },
+    "./hasBannerManifest": {
+      "import": "./dist/hasBannerManifest.mjs",
+      "require": "./dist/hasBannerManifest.js",
+      "types": "./dist/hasBannerManifest.d.ts"
+    },
+    "./isBannerManifest": {
+      "import": "./dist/isBannerManifest.mjs",
+      "require": "./dist/isBannerManifest.js",
+      "types": "./dist/isBannerManifest.d.ts"
+    },
+    "./isScriptableBanner": {
+      "import": "./dist/isScriptableBanner.mjs",
+      "require": "./dist/isScriptableBanner.js",
+      "types": "./dist/isScriptableBanner.d.ts"
+    },
+    "./isStaticBanner": {
+      "import": "./dist/isStaticBanner.mjs",
+      "require": "./dist/isStaticBanner.js",
+      "types": "./dist/isStaticBanner.d.ts"
+    },
+    "./matchAllBannerManifest": {
+      "import": "./dist/matchAllBannerManifest.mjs",
+      "require": "./dist/matchAllBannerManifest.js",
+      "types": "./dist/matchAllBannerManifest.d.ts"
+    },
+    "./mergeBannerManifest": {
+      "import": "./dist/mergeBannerManifest.mjs",
+      "require": "./dist/mergeBannerManifest.js",
+      "types": "./dist/mergeBannerManifest.d.ts"
+    },
+    "./types": {
+      "import": "./dist/types.mjs",
+      "require": "./dist/types.js",
+      "types": "./dist/types.d.ts"
+    }
+  },
   "files": [
     "README.md",
     "dist",

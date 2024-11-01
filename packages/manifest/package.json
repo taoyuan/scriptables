@@ -1,7 +1,7 @@
 {
   "name": "@scriptables/manifest",
   "description": "An utilities to generate, parse, and update manifest headers in Scriptable scripts.",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "keywords": [
     "scriptable",
     "scriptables",

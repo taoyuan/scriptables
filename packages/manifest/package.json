@@ -59,30 +59,30 @@
       "require": "./dist/consts.js",
       "types": "./dist/consts.d.ts"
     },
-    "./extractBannerManifest": {
-      "import": "./dist/extractBannerManifest.mjs",
-      "require": "./dist/extractBannerManifest.js",
-      "types": "./dist/extractBannerManifest.d.ts"
-    },
-    "./generateScriptableBanner": {
-      "import": "./dist/generateScriptableBanner.mjs",
-      "require": "./dist/generateScriptableBanner.js",
-      "types": "./dist/generateScriptableBanner.d.ts"
+    "./extractScriptableManifest": {
+      "import": "./dist/extractScriptableManifest.mjs",
+      "require": "./dist/extractScriptableManifest.js",
+      "types": "./dist/extractScriptableManifest.d.ts"
     },
     "./generateManifestText": {
       "import": "./dist/generateManifestText.mjs",
       "require": "./dist/generateManifestText.js",
       "types": "./dist/generateManifestText.d.ts"
     },
+    "./generateScriptableBanner": {
+      "import": "./dist/generateScriptableBanner.mjs",
+      "require": "./dist/generateScriptableBanner.js",
+      "types": "./dist/generateScriptableBanner.d.ts"
+    },
     "./hasBannerManifest": {
       "import": "./dist/hasBannerManifest.mjs",
       "require": "./dist/hasBannerManifest.js",
       "types": "./dist/hasBannerManifest.d.ts"
     },
-    "./isBannerManifest": {
-      "import": "./dist/isBannerManifest.mjs",
-      "require": "./dist/isBannerManifest.js",
-      "types": "./dist/isBannerManifest.d.ts"
+    "./isManifestBanner": {
+      "import": "./dist/isManifestBanner.mjs",
+      "require": "./dist/isManifestBanner.js",
+      "types": "./dist/isManifestBanner.d.ts"
     },
     "./isScriptableBanner": {
       "import": "./dist/isScriptableBanner.mjs",
@@ -99,10 +99,10 @@
       "require": "./dist/matchAllBannerManifest.js",
       "types": "./dist/matchAllBannerManifest.d.ts"
     },
-    "./mergeBannerManifest": {
-      "import": "./dist/mergeBannerManifest.mjs",
-      "require": "./dist/mergeBannerManifest.js",
-      "types": "./dist/mergeBannerManifest.d.ts"
+    "./mergeScriptableBanner": {
+      "import": "./dist/mergeScriptableBanner.mjs",
+      "require": "./dist/mergeScriptableBanner.js",
+      "types": "./dist/mergeScriptableBanner.d.ts"
     },
     "./types": {
       "import": "./dist/types.mjs",

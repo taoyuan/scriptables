@@ -29,9 +29,12 @@ describe('bundle', () => {
       name: 'fileConfig',
       always_run_in_app: true,
       share_sheet_inputs: ['text', 'url'],
+      icon: {color: 'red', glyph: 'magic'},
     };
-    const configFilePath = join(tmpDir.name, 'input.manifest');
+    const configFilePath = join(tmpDir.name, 'input.json');
     fs.writeFileSync(configFilePath, JSON.stringify(fileConfig));
+
+    const mergedManifest = {...mockManifest, ...fileConfig} as ScriptableManifest;
 
     const rollupBuild = await rollup({
       input: inputFilePath,
@@ -43,17 +46,24 @@ describe('bundle', () => {
     });
     const [scriptChunk, scriptableAsset] = output as [OutputChunk, OutputAsset];
 
-    const expectedBanner = generateScriptableBanner({...fileConfig, ...mockManifest} as ScriptableManifest);
+    const expectedBanner = generateScriptableBanner(mergedManifest);
 
     expect(scriptChunk.fileName).toBe('input.js');
     expect(scriptChunk.type).toBe('chunk');
     expect(scriptChunk.code).toContain(expectedBanner);
     expect(scriptChunk.code).toContain(mockCode);
+    expect(scriptChunk.code).toContain('always-run-in-app: true');
+    expect(scriptChunk.code).toContain('share-sheet-inputs: text, url');
+    expect(scriptChunk.code).toContain('icon-color: red');
+    expect(scriptChunk.code).toContain('icon-glyph: magic');
 
     expect(scriptableAsset).toBeDefined();
     expect(scriptableAsset.fileName).toBe('input.scriptable');
     expect(scriptableAsset.type).toBe('asset');
     expect(scriptableAsset.source).toBeDefined();
+
+    const assetContent = JSON.parse(scriptableAsset.source as string);
+    expect(assetContent).toMatchObject(mergedManifest);
   });
 
   it('should handle missing config file gracefully', async () => {
@@ -109,7 +119,7 @@ describe('bundle', () => {
     const inputFilePath = join(tmpDir.name, 'input.js');
     fs.writeFileSync(inputFilePath, mockCode);
 
-    const configFilePath = join(tmpDir.name, 'input.manifest');
+    const configFilePath = join(tmpDir.name, 'input.json');
     fs.writeFileSync(configFilePath, '{invalidJson}');
 
     const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation();
@@ -296,7 +306,7 @@ describe('bundle', () => {
       always_run_in_app: true,
       share_sheet_inputs: ['text', 'url'],
     };
-    const configFilePath = join(tmpDir.name, 'input.manifest');
+    const configFilePath = join(tmpDir.name, 'input.json');
     fs.writeFileSync(configFilePath, JSON.stringify(fileManifest));
 
     const rollupBuild = await rollup({

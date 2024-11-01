@@ -1,6 +1,6 @@
 import {generateScriptableBanner, ScriptableManifest} from '@scriptables/manifest';
 import {existsSync, readFileSync} from 'fs';
-import {basename, dirname, resolve} from 'path';
+import {basename, dirname, extname, resolve} from 'path';
 import type {Plugin} from 'rollup';
 
 const SUPPORTED_MANIFEST_EXTENSIONS = ['.manifest.json', '.manifest', '.json'];
@@ -16,7 +16,7 @@ export default function bundle(manifest: ScriptableManifest = {}): Plugin {
 
       if (path) {
         const chunkDir = dirname(path);
-        const chunkBaseName = basename(path, '.js');
+        const chunkBaseName = getFileBaseName(path);
         const manifestFilePath = SUPPORTED_MANIFEST_EXTENSIONS.map(ext =>
           resolve(chunkDir, `${chunkBaseName}${ext}`),
         ).find(existsSync);
@@ -53,4 +53,10 @@ export default function bundle(manifest: ScriptableManifest = {}): Plugin {
       };
     },
   };
+}
+
+function getFileBaseName(filePath: string) {
+  const fileName = basename(filePath);
+  const ext = extname(fileName);
+  return basename(filePath).replace(ext, '');
 }
